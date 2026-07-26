@@ -1,6 +1,6 @@
 # Commons Android Copilot Instructions
 
-Use the repository root `AGENTS.md` as the source of truth for structure, commands, coding conventions, security, and handoff requirements. This file adds Copilot-specific review and cloud-agent guidance.
+Use the repository root `AGENTS.md` as the source of truth for structure, commands, coding conventions, security, and handoff requirements. Custom Copilot agents are defined in `.github/agents/*.agent.md`; use `pr-agent.agent.md` for implementation and `architecture-reviewer.agent.md` for focused review tasks. This file adds Copilot-specific review and cloud-agent guidance.
 
 Read [`docs/testing-strategy.md`](../docs/testing-strategy.md) before changing tests. This repository does not currently use Maestro; use the existing JUnit, Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX test infrastructure unless the issue explicitly proposes a tool change.
 
