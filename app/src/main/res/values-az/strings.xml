@@ -361,6 +361,7 @@
   <string name="share_app_title">Proqramı paylaş</string>
   <string name="rotate">Fırlat</string>
   <string name="crop">Kəs</string>
+  <string name="blur">Bulanıqlıq</string>
   <string name="error_fetching_nearby_places">Yaxınlıqdakı yerləri yükləmək mümkün olmadı</string>
   <string name="no_pictures_in_this_area">Bu ərazidə şəkillər yoxdur</string>
   <string name="no_nearby_places_around">Yaxınlıqda yer tapılmadı</string>
@@ -705,6 +706,7 @@
   <string name="custom_selector_already_uploaded_image_text">Bu şəkil artıq Commons-a yüklənib.</string>
   <string name="custom_selector_over_limit_warning">Texniki səbəblərə görə proqram eyni vaxtda %1$d+ şəkil yükləyə bilməz. %1$d yükləmə limiti %2$d ilə aşıldı.</string>
   <string name="custom_selector_dismiss_limit_warning_button_text">Bağla</string>
+  <string name="custom_selector_duplicates_warning">Seçilmiş bəzi şəkillər dublikatdır və yükləməzdən əvvəl silinəcək.</string>
   <string name="custom_selector_button_limit_text">Maks: %1$d</string>
   <string name="custom_selector_limit_error_desc">Xəta: Yükləmə Limiti aşıldı</string>
   <string name="wlm_upload_info">Bu şəkil Viki Abidələri Sevir müsabiqəsində iştirak edəcək</string>
