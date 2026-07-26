@@ -9,8 +9,6 @@ Follow the root `AGENTS.md` and `.github/copilot-instructions.md`. Work only on 
 
 Read [`docs/testing-strategy.md`](../../docs/testing-strategy.md) before modifying tests. This repository currently uses JUnit/Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX instrumentation; do not introduce Maestro as an assumption.
 
-Use current official [Android Developers](https://developer.android.com/), [Android architecture](https://developer.android.com/topic/architecture), [Android testing](https://developer.android.com/training/testing), and [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html) documentation as the standard. Consult the Commons documentation repository for app-specific context, but do not treat older or draft pages as current Android guidance.
-
 ## Required workflow
 
 1. Translate the issue into acceptance criteria and identify affected feature packages, flavors, callers, and failure modes.
@@ -18,17 +16,6 @@ Use current official [Android Developers](https://developer.android.com/), [Andr
 3. Implement the smallest compatible change. Preserve `prod` and `beta` behavior unless the issue says otherwise.
 4. Add or update regression tests. Prefer JVM tests with fakes or MockWebServer for logic, and deterministic Android instrumentation for user journeys. Keep live Beta tests separate.
 5. Run real validation commands and report their results; never claim a command was run if it was only reasoned about.
-
-## Architecture rules
-
-- Keep UI classes focused on rendering state and forwarding events.
-- Keep business rules out of Activities, Fragments, adapters, Retrofit interfaces, Room DAOs, and Workers.
-- Keep domain logic independent of Android framework types, Retrofit DTOs, and Room entities.
-- Add focused interfaces at external boundaries when they improve testability or isolate a dependency.
-- Preserve one source of truth and one-way state flow per feature.
-- Define retry, cancellation, offline, authentication-expiry, and duplicate-operation behavior.
-- Use SOLID and DDD concepts only when they solve a concrete coupling or domain-model problem.
-- Do not introduce a new architecture, module, use-case layer, or event system solely for stylistic consistency.
 
 ## Validation commands
 

@@ -1,14 +1,14 @@
 # Commons Android Copilot Instructions
 
-Use the repository root `AGENTS.md` as the source of truth for structure, commands, coding conventions, architecture, security, and handoff requirements. Custom Copilot agents are defined in `.github/agents/*.agent.md`; use `pr-agent.agent.md` for implementation and `architecture-reviewer.agent.md` for focused review tasks. This file adds Copilot-specific review and cloud-agent guidance.
+Use the repository root `AGENTS.md` as the source of truth. Custom Copilot agents are defined in `.github/agents/*.agent.md`.
 
 Keep these instructions concise and actionable. Prefer short imperative bullets, concrete examples, and distinct headings. Do not add vague goals such as “improve quality” or instructions about Copilot’s response formatting. Copilot code review is non-deterministic and context-limited; prioritize the highest-value rules and iterate using real pull requests.
 
-Read [`docs/testing-strategy.md`](../docs/testing-strategy.md) before changing tests. This repository does not currently use Maestro; use the existing JUnit, Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX test infrastructure unless the issue explicitly proposes a tool change.
+Read [`docs/testing-strategy.md`](../docs/testing-strategy.md) before changing tests. This repository uses JUnit, Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX instrumentation; Maestro is not part of the current baseline.
 
 ## Documentation authority
 
-For Android, Kotlin, Gradle, Compose, lifecycle, permissions, accessibility, security, and testing questions, consult current official documentation first: [Android Developers](https://developer.android.com/), [Android app architecture](https://developer.android.com/topic/architecture), [Android testing](https://developer.android.com/training/testing), and [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html). Use the Commons app documentation repository for project history and domain context, not as a substitute for current platform documentation. Avoid obsolete APIs and undocumented workarounds; if compatibility with `minSdk = 21` requires one, explain it in the PR.
+For Android and Kotlin questions, consult current official documentation first: [Android Developers](https://developer.android.com/), [Android architecture](https://developer.android.com/topic/architecture), [Android testing](https://developer.android.com/training/testing), and [Kotlin conventions](https://kotlinlang.org/docs/coding-conventions.html). Use Commons documentation for project context, not as a substitute for current platform guidance. Explain any `minSdk = 21` compatibility workaround in the PR.
 
 ## Before changing code
 
@@ -25,16 +25,6 @@ For Android, Kotlin, Gradle, Compose, lifecycle, permissions, accessibility, sec
 - Do not weaken tests, suppress lint, alter credentials, or delete existing behavior to make CI pass.
 - Do not use live Wikimedia accounts or remote mutable state for PR tests. Use fake sessions, test repositories, fixtures, or MockWebServer.
 - Replace fixed sleeps and swallowed `NoMatchingViewException` failures with synchronization and explicit diagnostics.
-
-## Architecture expectations
-
-- Keep Activities, Fragments, adapters, and composables focused on UI state and events.
-- Keep business rules out of UI classes, Retrofit interfaces, Room DAOs, and Workers.
-- Do not pass Retrofit DTOs, Room entities, Android framework types, or `Context` into domain logic.
-- Prefer focused interfaces at external boundaries and realistic test implementations over mock-only designs.
-- Preserve one source of truth and one-way state flow within each feature.
-- Define retry, cancellation, offline, authentication-expiry, and duplicate-operation behavior for network and background work.
-- Apply SOLID and DDD concepts when they reduce coupling or clarify a real domain concept; do not add ceremony without a named problem.
 
 ## Review expectations
 
