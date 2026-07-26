@@ -17,9 +17,6 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import coil3.intercept.Interceptor as CoilInterceptor
-import coil3.request.ErrorResult
-import coil3.request.ImageResult
 import okhttp3.OkHttpClient
 import okio.Path.Companion.toPath
 import fr.free.nrw.commons.auth.LoginActivity
@@ -130,9 +127,6 @@ class CommonsApplication : MultiDexApplication() {
             .crossfade(true)
             .components {
                 add(OkHttpNetworkFetcherFactory(callFactory = { okHttpClient }))
-                // Skip image loading when limited connection mode is enabled
-                // (replaces the original CustomOkHttpNetworkFetcher behavior)
-                add(LimitedConnectionModeInterceptor(defaultPrefs))
             }
             .memoryCache {
                 MemoryCache.Builder()
@@ -434,32 +428,5 @@ class CommonsApplication : MultiDexApplication() {
                 }
             }
         }
-    }
-}
-
-/**
- * Coil interceptor that skips network image loading when limited connection mode is enabled.
- * This replaces the original CustomOkHttpNetworkFetcher behavior from the Fresco setup.
- */
-class LimitedConnectionModeInterceptor(
-    private val defaultKvStore: JsonKvStore
-) : CoilInterceptor {
-
-    override suspend fun intercept(chain: CoilInterceptor.Chain): ImageResult {
-        val isLimitedConnectionMode = defaultKvStore.getBoolean(
-            CommonsApplication.IS_LIMITED_CONNECTION_MODE_ENABLED, false
-        )
-        if (isLimitedConnectionMode && chain.request.data is String) {
-            val url = chain.request.data as String
-            if (url.startsWith("http://") || url.startsWith("https://")) {
-                Timber.d("Skipping image load in limited connection mode: %s", url)
-                return ErrorResult(
-                    image = null,
-                    request = chain.request,
-                    throwable = Exception("Limited connection mode enabled")
-                )
-            }
-        }
-        return chain.proceed()
     }
 }
