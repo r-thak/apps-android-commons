@@ -30,7 +30,7 @@ Prefer `UploadUseCaseTest → FakeUploadGateway`. Avoid `UploadActivityTest → 
 ./gradlew testProdDebugUnitTest
 ./gradlew lintProdDebug
 ./gradlew assembleProdDebug assembleBetaDebug
-./gradlew connectedBetaDebugAndroidTest
+./gradlew connectedBetaDebugAndroidTest   # when an emulator/device is available
 ```
 
 Use a focused test class or method while iterating. Record the exact variant, emulator/API level, backend, credentials mode, and command for every result. Classify failures as product, test, environment/toolchain, external-service/credential, or flaky-test failures before changing code.
