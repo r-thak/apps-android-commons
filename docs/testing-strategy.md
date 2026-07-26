@@ -2,6 +2,8 @@
 
 This repository uses existing JUnit/Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX instrumentation infrastructure. Maestro is not part of the current testing baseline.
 
+Tests are also an architecture check: domain rules should be runnable on the JVM, external systems should be replaceable by fakes or fixtures, and UI tests should verify user-visible behavior rather than implementation-specific mock interactions.
+
 ## Test layers
 
 | Layer | Scope | Dependencies | Expected trigger |

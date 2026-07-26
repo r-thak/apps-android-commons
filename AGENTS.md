@@ -39,6 +39,20 @@ GitHub Copilot cloud agent can be assigned issues from GitHub and will open a pu
 
 Agents must never make a test pass by adding `@Ignore`, weakening assertions, swallowing exceptions, deleting coverage, or increasing a fixed sleep without identifying the race. Classify failures as product, test, environment/toolchain, external-service/credential, or flaky-test failures. Keep live Wikimedia/Beta calls and tests that mutate remote state out of the normal PR gate; prefer fakes, test repositories, and MockWebServer for deterministic tests. See [`docs/testing-strategy.md`](docs/testing-strategy.md) for the test layers and escalation path.
 
+## Architecture Contract
+
+- Use a feature-oriented modular-monolith approach. Do not introduce a new architecture pattern or module unless it solves a named problem and has a migration boundary.
+- Keep UI entry points focused on rendering state and forwarding events. Do not place business rules, API calls, database queries, upload policy, or retry policy in Activities, Fragments, adapters, or composables.
+- Keep domain logic independent of Retrofit, Room, Android `Context`, `View`, `Activity`, `Fragment`, and API DTO types.
+- Prefer dependency inversion at external boundaries: define focused interfaces for authentication, Wikimedia APIs, persistence, uploads, filesystem access, location, and background work.
+- Keep one source of truth per feature and prefer one-way state flow: user event → presenter/ViewModel → domain operation → repository → state/result → UI.
+- Map external DTOs and database entities into feature/domain models before exposing them to UI code.
+- Represent meaningful concepts with validated models or value objects rather than unstructured `String`, `Boolean`, or map values.
+- Define retryable, permanent, offline, authentication-expired, and duplicate-operation behavior explicitly.
+- For uploads and workers, reason about cancellation, retries, process death, idempotency, and duplicate submissions.
+- Prefer realistic fakes, test repositories, fixtures, and MockWebServer over tests that only verify mock call sequences.
+- Apply SOLID where it reduces coupling; do not add interfaces, wrappers, use cases, or domain events solely for ceremony.
+
 ## Android Documentation Policy
 
 Use the current official documentation as the normative source for Android platform, Gradle, Kotlin, Compose, lifecycle, permissions, accessibility, security, and testing guidance:

@@ -1,6 +1,8 @@
 # Commons Android Copilot Instructions
 
-Use the repository root `AGENTS.md` as the source of truth for structure, commands, coding conventions, security, and handoff requirements. Custom Copilot agents are defined in `.github/agents/*.agent.md`; use `pr-agent.agent.md` for implementation and `architecture-reviewer.agent.md` for focused review tasks. This file adds Copilot-specific review and cloud-agent guidance.
+Use the repository root `AGENTS.md` as the source of truth for structure, commands, coding conventions, architecture, security, and handoff requirements. Custom Copilot agents are defined in `.github/agents/*.agent.md`; use `pr-agent.agent.md` for implementation and `architecture-reviewer.agent.md` for focused review tasks. This file adds Copilot-specific review and cloud-agent guidance.
+
+Keep these instructions concise and actionable. Prefer short imperative bullets, concrete examples, and distinct headings. Do not add vague goals such as “improve quality” or instructions about Copilot’s response formatting. Copilot code review is non-deterministic and context-limited; prioritize the highest-value rules and iterate using real pull requests.
 
 Read [`docs/testing-strategy.md`](../docs/testing-strategy.md) before changing tests. This repository does not currently use Maestro; use the existing JUnit, Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX test infrastructure unless the issue explicitly proposes a tool change.
 
@@ -24,9 +26,25 @@ For Android, Kotlin, Gradle, Compose, lifecycle, permissions, accessibility, sec
 - Do not use live Wikimedia accounts or remote mutable state for PR tests. Use fake sessions, test repositories, fixtures, or MockWebServer.
 - Replace fixed sleeps and swallowed `NoMatchingViewException` failures with synchronization and explicit diagnostics.
 
+## Architecture expectations
+
+- Keep Activities, Fragments, adapters, and composables focused on UI state and events.
+- Keep business rules out of UI classes, Retrofit interfaces, Room DAOs, and Workers.
+- Do not pass Retrofit DTOs, Room entities, Android framework types, or `Context` into domain logic.
+- Prefer focused interfaces at external boundaries and realistic test implementations over mock-only designs.
+- Preserve one source of truth and one-way state flow within each feature.
+- Define retry, cancellation, offline, authentication-expiry, and duplicate-operation behavior for network and background work.
+- Apply SOLID and DDD concepts when they reduce coupling or clarify a real domain concept; do not add ceremony without a named problem.
+
 ## Review expectations
 
-Flag only actionable issues, prioritizing: incorrect behavior, lifecycle/state bugs, concurrency, data loss, security/privacy, offline/error handling, API compatibility, performance, and missing regression coverage. Trace changes across callers and variants; a locally correct implementation that violates an architectural boundary is a finding. Do not report formatting preferences already enforced by the repository.
+- Flag only actionable issues, prioritizing: incorrect behavior, lifecycle/state bugs, concurrency, data loss, security/privacy, offline/error handling, API compatibility, performance, architectural boundary violations, and missing regression coverage.
+- Trace changes across callers, persistence, workers, APIs, and both product flavors.
+- Check whether domain logic depends directly on Android, Retrofit, Room, or API DTOs.
+- Check whether retries, cancellation, rotation, process death, or duplicate submissions change behavior.
+- Require a deterministic test seam for new external dependencies.
+- Do not report formatting preferences already enforced by the repository.
+- Explain the failure scenario, affected users or code path, and concrete fix for every finding.
 
 ## Verification
 

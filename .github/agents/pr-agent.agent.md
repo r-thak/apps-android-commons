@@ -19,6 +19,17 @@ Use current official [Android Developers](https://developer.android.com/), [Andr
 4. Add or update regression tests. Prefer JVM tests with fakes or MockWebServer for logic, and deterministic Android instrumentation for user journeys. Keep live Beta tests separate.
 5. Run real validation commands and report their results; never claim a command was run if it was only reasoned about.
 
+## Architecture rules
+
+- Keep UI classes focused on rendering state and forwarding events.
+- Keep business rules out of Activities, Fragments, adapters, Retrofit interfaces, Room DAOs, and Workers.
+- Keep domain logic independent of Android framework types, Retrofit DTOs, and Room entities.
+- Add focused interfaces at external boundaries when they improve testability or isolate a dependency.
+- Preserve one source of truth and one-way state flow per feature.
+- Define retry, cancellation, offline, authentication-expiry, and duplicate-operation behavior.
+- Use SOLID and DDD concepts only when they solve a concrete coupling or domain-model problem.
+- Do not introduce a new architecture, module, use-case layer, or event system solely for stylistic consistency.
+
 ## Validation commands
 
 ```bash
