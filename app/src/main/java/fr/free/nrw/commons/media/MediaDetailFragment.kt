@@ -718,7 +718,7 @@ class MediaDetailFragment : CommonsDaggerSupportFragment(), CategoryEditHelper.C
      * Loads the media image into the detail ImageView.
      *
      * Mirrors the original Fresco behaviour: show a spinner while loading,
-     * prefer the full-resolution URL, fall back to the thumbnail URL.
+     * show the thumbnail first, then replace it with the full-resolution URL.
      */
     private fun setupImageView() {
         val imageBackgroundColor: Int = imageBackgroundColor
@@ -729,8 +729,25 @@ class MediaDetailFragment : CommonsDaggerSupportFragment(), CategoryEditHelper.C
         binding.mediaDetailImageView.setImageDrawable(null)
         binding.mediaDetailImageProgress.visibility = View.VISIBLE
 
-        // TODO: load low-resolution image until the full-resolution image is loaded.
-        binding.mediaDetailImageView.load(media!!.imageUrl) {
+        val imageUrl = media!!.imageUrl
+        val thumbUrl = media!!.thumbUrl
+
+        if (!thumbUrl.isNullOrBlank() && thumbUrl != imageUrl) {
+            binding.mediaDetailImageView.load(thumbUrl) {
+                error(R.drawable.image_placeholder)
+                listener(
+                    onSuccess = { _, _ -> loadFullResolutionImage(imageUrl) },
+                    onError = { _, _ -> loadFullResolutionImage(imageUrl) }
+                )
+            }
+        } else {
+            loadFullResolutionImage(imageUrl)
+        }
+    }
+
+    private fun loadFullResolutionImage(imageUrl: String?) {
+        binding.mediaDetailImageView.load(imageUrl) {
+            placeholder(binding.mediaDetailImageView.drawable)
             error(R.drawable.image_placeholder)
             listener(
                 onSuccess = { _, _ ->

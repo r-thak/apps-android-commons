@@ -56,11 +56,28 @@ private fun ImageView.tryLoadDownsampledImage(
     }
 
     return try {
+        val targetWidth = measuredWidth.takeIf { it > 0 } ?: width
+        val targetHeight = measuredHeight.takeIf { it > 0 } ?: height
+        if (URLUtil.isHttpUrl(imageSource) || URLUtil.isHttpsUrl(imageSource)) {
+            load(imageSource) {
+                size(targetWidth, targetHeight)
+                placeholder(placeholderResId)
+                error(placeholderResId)
+                listener(
+                    onError = { _, result ->
+                        Timber.e(result.throwable, "Unable to load downsampled upload item image: %s", imageSource)
+                        setImageResource(placeholderResId)
+                    }
+                )
+            }
+            return true
+        }
+
         val downsampledBitmap =
             decodeDownsampledBitmap(
                 imageSource,
-                requestedWidth = measuredWidth.takeIf { it > 0 } ?: width,
-                requestedHeight = measuredHeight.takeIf { it > 0 } ?: height
+                requestedWidth = targetWidth,
+                requestedHeight = targetHeight
             ) ?: return false
 
         load(downsampledBitmap) {
