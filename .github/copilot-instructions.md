@@ -1,0 +1,35 @@
+# Commons Android Copilot Instructions
+
+Use the repository root `AGENTS.md` as the source of truth for structure, commands, coding conventions, security, and handoff requirements. This file adds Copilot-specific review and cloud-agent guidance.
+
+Read [`docs/testing-strategy.md`](../docs/testing-strategy.md) before changing tests. This repository does not currently use Maestro; use the existing JUnit, Robolectric, MockWebServer, Espresso, UiAutomator, and AndroidX test infrastructure unless the issue explicitly proposes a tool change.
+
+## Documentation authority
+
+For Android, Kotlin, Gradle, Compose, lifecycle, permissions, accessibility, security, and testing questions, consult current official documentation first: [Android Developers](https://developer.android.com/), [Android app architecture](https://developer.android.com/topic/architecture), [Android testing](https://developer.android.com/training/testing), and [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html). Use the Commons app documentation repository for project history and domain context, not as a substitute for current platform documentation. Avoid obsolete APIs and undocumented workarounds; if compatibility with `minSdk = 21` requires one, explain it in the PR.
+
+## Before changing code
+
+- Identify the affected feature package, data/API boundaries, persistence, background work, and UI entry points.
+- Read existing tests and the relevant flavor configuration (`prod` or `beta`); do not assume `assembleDebug` or `testDebugUnitTest` exists.
+- Preserve compatibility with the app's minimum SDK and both product flavors unless the issue explicitly narrows scope.
+- Determine whether the change belongs in JVM tests, deterministic emulator smoke tests, or live Beta integration tests.
+
+## Implementation expectations
+
+- Prefer the smallest change that fits the existing architecture. Do not introduce a new framework, module, or abstraction without explaining its ownership and migration path.
+- Keep network, storage, and Android framework calls behind testable boundaries where practical. Avoid real network calls in unit tests.
+- For functional changes, add a regression test. For UI or navigation changes, add an Android instrumentation test when feasible and include manual verification if automation is not yet possible.
+- Do not weaken tests, suppress lint, alter credentials, or delete existing behavior to make CI pass.
+- Do not use live Wikimedia accounts or remote mutable state for PR tests. Use fake sessions, test repositories, fixtures, or MockWebServer.
+- Replace fixed sleeps and swallowed `NoMatchingViewException` failures with synchronization and explicit diagnostics.
+
+## Review expectations
+
+Flag only actionable issues, prioritizing: incorrect behavior, lifecycle/state bugs, concurrency, data loss, security/privacy, offline/error handling, API compatibility, performance, and missing regression coverage. Trace changes across callers and variants; a locally correct implementation that violates an architectural boundary is a finding. Do not report formatting preferences already enforced by the repository.
+
+## Verification
+
+Run the narrowest relevant Gradle task, then `./gradlew lintProdDebug` and the affected build task. If an emulator is available, run `./gradlew connectedBetaDebugAndroidTest`; otherwise state that instrumentation was not run and provide exact manual steps.
+
+Never claim a command was run if it was only reasoned about. Report the exact variant, device/API level, credentials or backend used, failed test class, and failure category.
