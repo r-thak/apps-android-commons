@@ -22,6 +22,8 @@ Tests are also an architecture check: domain rules should be runnable on the JVM
 - Do not catch and ignore `NoMatchingViewException` or other setup/assertion failures.
 - Do not add `@Ignore`, weaken assertions, or suppress a test to make CI pass.
 
+Prefer `UploadUseCaseTest → FakeUploadGateway`. Avoid `UploadActivityTest → real Wikimedia API → real account → remote upload` for pull-request validation.
+
 ## Commands
 
 ```bash
@@ -36,3 +38,5 @@ Use a focused test class or method while iterating. Record the exact variant, em
 ## Stabilization order
 
 When an instrumentation test is failing, first make the failure observable, then remove timing and external-service dependencies, then add deterministic fixtures or a fake session. Promote one stable test group to the PR gate at a time. Keep upload and other remote-mutating tests outside the PR gate until isolation and cleanup are proven.
+
+For contributor-facing test changes, follow `CONTRIBUTING.md`: keep commits logically separate, describe the change clearly, add tests where possible, and update the Wiki or related documentation when the testing workflow changes.

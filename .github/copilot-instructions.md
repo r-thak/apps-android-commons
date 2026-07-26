@@ -8,7 +8,7 @@ Read [`docs/testing-strategy.md`](../docs/testing-strategy.md) before changing t
 
 ## Documentation authority
 
-For Android and Kotlin questions, consult current official documentation first: [Android Developers](https://developer.android.com/), [Android architecture](https://developer.android.com/topic/architecture), [Android testing](https://developer.android.com/training/testing), and [Kotlin conventions](https://kotlinlang.org/docs/coding-conventions.html). Use Commons documentation for project context, not as a substitute for current platform guidance. Explain any `minSdk = 21` compatibility workaround in the PR.
+Use current Android and Kotlin platform guidance when making implementation decisions. Use Commons documentation for project context, not as a substitute for current platform guidance. Explain any `minSdk = 21` compatibility workaround in the PR. The review rules in this file are self-contained; do not depend on following external links.
 
 ## Before changing code
 
@@ -25,6 +25,8 @@ For Android and Kotlin questions, consult current official documentation first: 
 - Do not weaken tests, suppress lint, alter credentials, or delete existing behavior to make CI pass.
 - Do not use live Wikimedia accounts or remote mutable state for PR tests. Use fake sessions, test repositories, fixtures, or MockWebServer.
 - Replace fixed sleeps and swallowed `NoMatchingViewException` failures with synchronization and explicit diagnostics.
+- Add descriptive KDocs for every new class and method; do not add `@author` tags.
+- Keep documentation and relevant Wiki pages current when behavior or contributor workflow changes.
 
 ## Review expectations
 
@@ -35,6 +37,18 @@ For Android and Kotlin questions, consult current official documentation first: 
 - Require a deterministic test seam for new external dependencies.
 - Do not report formatting preferences already enforced by the repository.
 - Explain the failure scenario, affected users or code path, and concrete fix for every finding.
+- Check that new classes and methods have descriptive KDocs and no `@author` tags.
+- Check that the PR description links the issue, records tests, and includes UI screenshots or recordings when applicable.
+
+Example finding:
+
+```text
+[P1] Retry can upload the same file twice
+
+UploadWorker retries after a timeout, but the server may have accepted the
+previous request. Add an idempotency key or verify the existing upload before
+retrying, then cover the timeout/retry path with a deterministic test.
+```
 
 ## Verification
 

@@ -17,7 +17,7 @@ Use the checked-in Gradle wrapper and Java 17.
 
 ## Coding Style & Naming Conventions
 
-Write Kotlin with four-space indentation, clear nullability, and small, readable functions. Follow existing Android/Kotlin conventions: `PascalCase` for classes and composables, `camelCase` for methods and properties, and descriptive `*Test` or `*UnitTest` test classes. Keep feature code in its relevant package and place UI strings in resources rather than hard-coding them. Add reasonably descriptive Javadocs/KDocs for every new class and method; do not add `@author` tags.
+Write Kotlin with four-space indentation, clear nullability, and small, readable functions. Follow existing Android/Kotlin conventions: `PascalCase` for classes and composables, `camelCase` for methods and properties, and descriptive `*Test` or `*UnitTest` test classes. Keep feature code in its relevant package and place UI strings in resources rather than hard-coding them. Add reasonably descriptive KDocs for every new class and method; do not add `@author` tags. Readable code should make comments unnecessary except where they explain non-obvious behavior.
 
 ## Testing Guidelines
 
@@ -25,7 +25,7 @@ Use the existing JUnit/Robolectric-style unit-test setup for JVM tests and Andro
 
 ## Commit & Pull Request Guidelines
 
-Make separate commits for logically separate changes. Use a short imperative first line, optionally prefixed with the affected area (for example, `upload: prevent duplicate images`), followed by a meaningful body when context is needed. Pull requests should explain the problem and solution, include testing performed, link related issues, and provide screenshots or recordings for UI changes. Update relevant documentation or wiki content when behavior changes.
+Make separate commits for logically separate changes. Use a short first line, optionally prefixed with the affected area (for example, `upload: prevent duplicate images`), followed by a meaningful body when context is needed. Pull requests should explain the problem and solution, include testing performed, link related issues, and provide screenshots or recordings for UI changes. Update relevant documentation or wiki content when behavior changes, and keep the Wiki current when a contribution changes contributor-facing instructions.
 
 ## Security & Configuration
 
@@ -52,6 +52,20 @@ Agents must never make a test pass by adding `@Ignore`, weakening assertions, sw
 - For uploads and workers, reason about cancellation, retries, process death, idempotency, and duplicate submissions.
 - Prefer realistic fakes, test repositories, fixtures, and MockWebServer over tests that only verify mock call sequences.
 - Apply SOLID where it reduces coupling; do not add interfaces, wrappers, use cases, or domain events solely for ceremony.
+
+Example boundary:
+
+```kotlin
+// Prefer: domain-facing interface
+interface UploadGateway {
+    suspend fun upload(request: UploadRequest): UploadResult
+}
+
+// Avoid: domain code depending directly on a Retrofit API
+class UploadUseCase(private val uploadApi: UploadApi)
+```
+
+Example test seam: `UploadUseCaseTest → FakeUploadGateway`. Avoid `UploadActivityTest → real Wikimedia API → real account → remote upload`.
 
 ## Android Documentation Policy
 

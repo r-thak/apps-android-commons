@@ -32,4 +32,20 @@ Never make a test pass by adding `@Ignore`, weakening assertions, swallowing exc
 
 ## Pull request output
 
-Include: summary, motivation with `Fixes #ID` when applicable, implementation and architectural impact, tests run, known limitations, and manual verification steps. For UI changes include screenshots or recordings. Keep commits logically separate and use an area-prefixed subject where useful, such as `upload: prevent duplicate images`.
+Include: summary, motivation with `Fixes #ID` when applicable, implementation and architectural impact, tests run, known limitations, and manual verification steps. For UI changes include screenshots or recordings. Keep commits logically separate, describe them clearly, and use an area-prefixed subject where useful, such as `upload: prevent duplicate images`. Add descriptive KDocs for new classes and methods, do not add `@author` tags, and update relevant Wiki or contributor documentation when needed.
+
+When an issue is underspecified, structure the proposed work like this before coding:
+
+```text
+Problem:
+Retries after a network timeout can submit the same image twice.
+
+Acceptance criteria:
+- Retries do not create duplicate uploads.
+- Successful upload behavior remains unchanged in prod and beta.
+- Add a deterministic regression test.
+
+Out of scope:
+- Redesigning the upload flow.
+- Refactoring unrelated UI code.
+```
