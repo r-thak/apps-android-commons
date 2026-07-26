@@ -714,12 +714,7 @@ class MediaDetailFragment : CommonsDaggerSupportFragment(), CategoryEditHelper.C
         }
     }
 
-    /**
-     * Loads the media image into the detail ImageView.
-     *
-     * Mirrors the original Fresco behaviour: show a spinner while loading,
-     * show the thumbnail first, then replace it with the full-resolution URL.
-     */
+    /** Loads the media image into the detail ImageView. */
     private fun setupImageView() {
         val imageBackgroundColor: Int = imageBackgroundColor
         if (imageBackgroundColor != DEFAULT_IMAGE_BACKGROUND_COLOR) {
@@ -727,7 +722,6 @@ class MediaDetailFragment : CommonsDaggerSupportFragment(), CategoryEditHelper.C
         }
 
         binding.mediaDetailImageView.setImageDrawable(null)
-        binding.mediaDetailImageProgress.visibility = View.VISIBLE
 
         val imageUrl = media!!.imageUrl
         val thumbUrl = media!!.thumbUrl
@@ -736,7 +730,9 @@ class MediaDetailFragment : CommonsDaggerSupportFragment(), CategoryEditHelper.C
             binding.mediaDetailImageView.load(thumbUrl) {
                 error(R.drawable.image_placeholder)
                 listener(
-                    onSuccess = { _, _ -> loadFullResolutionImage(imageUrl) },
+                    onSuccess = { _, _ ->
+                        loadFullResolutionImage(imageUrl)
+                    },
                     onError = { _, _ -> loadFullResolutionImage(imageUrl) }
                 )
             }
@@ -746,17 +742,13 @@ class MediaDetailFragment : CommonsDaggerSupportFragment(), CategoryEditHelper.C
     }
 
     private fun loadFullResolutionImage(imageUrl: String?) {
-        binding.mediaDetailImageView.load(imageUrl) {
+            binding.mediaDetailImageView.load(imageUrl) {
             placeholder(binding.mediaDetailImageView.drawable)
             error(R.drawable.image_placeholder)
             listener(
                 onSuccess = { _, _ ->
-                    binding.mediaDetailImageProgress.visibility = View.GONE
                     updateImageDimensions()
                     updateAspectRatio(binding.mediaDetailScrollView.width)
-                },
-                onError = { _, _ ->
-                    binding.mediaDetailImageProgress.visibility = View.GONE
                 }
             )
         }
