@@ -338,8 +338,6 @@ dependencies {
     implementation(libs.androidx.preference)
     implementation(libs.androidx.preference.ktx)
 
-    //Android Media
-    implementation(libs.juanitobananas.androidDmediaUtil)
     implementation(libs.androidx.multidex)
 
     // Kotlin + coroutines
@@ -350,6 +348,9 @@ dependencies {
 
     kaptTest(libs.androidx.databinding.compiler)
     kaptAndroidTest(libs.androidx.databinding.compiler)
+
+    // Jpegtran
+    implementation(libs.ajpegtran)
 
     implementation(libs.coordinates2country.android) {
         exclude(group = "com.google.android", module = "android")
