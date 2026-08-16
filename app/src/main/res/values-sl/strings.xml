@@ -568,7 +568,7 @@
   <plurals name="category_edit_helper_show_edit_message_if">
     <item quantity="one">Kategorija %1$s je dodana.</item>
     <item quantity="two">Kategoriji %1$s sta dodani</item>
-    <item quantity="few">Kategorije %1$ so dodane</item>
+    <item quantity="few">Kategorije %1$s so dodane</item>
     <item quantity="other">Kategorije %1$s so dodane.</item>
   </plurals>
   <string name="category_edit_helper_edit_message_else">Kategorij ni mogoče dodati.</string>
