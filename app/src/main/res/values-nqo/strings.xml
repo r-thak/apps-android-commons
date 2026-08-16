@@ -504,7 +504,7 @@
   <string name="missing_category">ߦߌߟߡߊ ߟߎ߬ ߝߙߊ߬ ߖߌ߬ߦߊ߬ߓߍ ߣߌ߲߬ ߠߊ߫ ߞߵߊ߬ ߟߊߓߊ߯ߙߊߟߌ ߟߊߢߊ߬.</string>
   <string name="missing_article">ߖߌ߬ߦߊ߬ߓߍ ߣߌ߲߬ ߓߌ߬ߟߊ߬ ߥߞߌߔߋߘߌߦߊ ߞߎߡߘߊ߫ ߞߏߟߏ߲ߛߏ߲ߣߍ߲ ߠߎ߬ ߟߊ߫ ߖߌ߬ߦߊ߬ߓߍ߬ ߛߌ߫ ߕߍ߫ ߡߍ߲ ߠߎ߬ ߟߊ߫.</string>
   <string name="add_picture_to_wikipedia_article_title">ߖߌ߬ߦߊ߬ߓߍ ߝߙߊ߬ ߥߞߌߔߋߘߌߦߊ ߞߊ߲߬</string>
-  <string name="add_picture_to_wikipedia_article_desc">ߌ ߦߴߊ߬ ߝߍ߬ ߞߊ߬ ߖߌ߬ߦߊ߬ߓߍ ߣߌ߲߬ ߓߌ߬ߟߊ߬ %1$ ߞߊ߲ ߥߞߌߔߋߘߌߦߊ ߞߎߡߘߊ ߟߊ߫ ߓߊ߬؟</string>
+  <string name="add_picture_to_wikipedia_article_desc">ߌ ߦߴߊ߬ ߝߍ߬ ߞߊ߬ ߖߌ߬ߦߊ߬ߓߍ ߣߌ߲߬ ߓߌ߬ߟߊ߬ %1$s ߞߊ߲ ߥߞߌߔߋߘߌߦߊ ߞߎߡߘߊ ߟߊ߫ ߓߊ߬؟</string>
   <string name="confirm">ߊ߬ ߟߊߛߙߋߦߊ߫</string>
   <string name="instructions_title">ߟߊ߬ߟߌ߰ߟߌ ߟߎ߫</string>
   <string name="wikipedia_instructions_step_1">߁߭. ߥߞߌߛߓߍߟߌ ߢߌ߲߬ ߠߎ߬ ߟߊߓߊ߯ߙߊ߫:</string>
