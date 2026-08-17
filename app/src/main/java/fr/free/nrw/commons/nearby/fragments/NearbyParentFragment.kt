@@ -917,9 +917,14 @@ class NearbyParentFragment : CommonsDaggerSupportFragment(),
                 requireContext().unregisterReceiver(broadcastReceiver)
             }
 
-            if (locationManager != null && presenter != null) {
-                locationManager!!.removeLocationListener(presenter!!)
-                locationManager!!.unregisterLocationManager()
+            // locationManager is `lateinit var`, i.e. non-null-typed, so `!= null` can never be
+            // false here -- it doesn't guard against "not yet initialized" the way it looks like
+            // it should. Accessing an uninitialized lateinit var throws
+            // UninitializedPropertyAccessException, not a null; ::locationManager.isInitialized
+            // is the actual way to check that.
+            if (::locationManager.isInitialized && presenter != null) {
+                locationManager.removeLocationListener(presenter!!)
+                locationManager.unregisterLocationManager()
             }
         } catch (e: Exception) {
             Timber.e(e)
@@ -936,9 +941,16 @@ class NearbyParentFragment : CommonsDaggerSupportFragment(),
         }
 
         if (presenter == null) Timber.w("NearbyParentFragment: presenter is null")
-        if (applicationKvStore == null) Timber.w("NearbyParentFragment: applicationKvStore is null")
+        // applicationKvStore is `lateinit var`, i.e. non-null-typed, so `== null` here (and the
+        // `?: return` below) can never trigger. Accessing an uninitialized lateinit var throws
+        // UninitializedPropertyAccessException instead -- and unlike onPause() above, nothing
+        // here catches it. ::applicationKvStore.isInitialized is the real guard.
+        if (!::applicationKvStore.isInitialized) {
+            Timber.w("NearbyParentFragment: applicationKvStore is not initialized")
+            return
+        }
 
-        presenter?.removeNearbyPreferences(applicationKvStore ?: return)
+        presenter?.removeNearbyPreferences(applicationKvStore)
     }
 
     private fun initViews() {
