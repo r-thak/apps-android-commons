@@ -184,7 +184,7 @@ class UploadMediaPresenter @Inject constructor(
                 if (throwable is UnknownHostException) {
                     view.showConnectionErrorPopupForCaptionCheck()
                 } else {
-                    view.showMessage(throwable.localizedMessage, R.color.color_error)
+                    view.showMessage(throwable.localizedMessage ?: "", R.color.color_error)
                 }
                 Timber.e(throwable, "Error occurred while handling image")
             })
@@ -305,7 +305,7 @@ class UploadMediaPresenter @Inject constructor(
                     view.showProgress(false)
                     view.showConnectionErrorPopup()
                 } else {
-                    view.showMessage(throwable.localizedMessage, R.color.color_error)
+                    view.showMessage(throwable.localizedMessage ?: "", R.color.color_error)
                 }
                 Timber.e(throwable, "Error occurred while handling image")
             })
