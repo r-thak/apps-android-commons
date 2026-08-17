@@ -138,7 +138,14 @@ class ExploreMapPresenter(
     fun updateMapMarkers(
         explorePlacesInfo: ExplorePlacesInfo
     ) {
-        if (explorePlacesInfo.mediaList != null) {
+        // ExplorePlacesInfo.mediaList is `List<Media> = emptyList()`, never null, so this was
+        // always taking the "found results" branch below -- even for a zero-result search.
+        // loadAttractionsFromLocationToBaseMarkerOptions() only invokes its completion callback
+        // from inside the per-place Glide image-loading callback, which never runs for an empty
+        // place list, so onNearbyBaseMarkerThumbsReady() -- and with it lockUnlockNearby(false)
+        // and setProgressBarVisibility(false) -- was never called for a zero-result search,
+        // leaving the progress bar spinning and nearby permanently locked.
+        if (explorePlacesInfo.mediaList.isNotEmpty()) {
             prepareNearbyBaseMarkers(explorePlacesInfo)
         } else {
             lockUnlockNearby(false) // So that new location updates wont come
