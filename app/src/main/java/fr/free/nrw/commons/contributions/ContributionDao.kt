@@ -76,8 +76,12 @@ abstract class ContributionDao {
     @Query("SELECT * from contribution WHERE media_filename=:fileName")
     abstract fun getContributionWithTitle(fileName: String): List<Contribution>
 
+    // Nullable: the query legitimately returns no row once a contribution has been deleted
+    // (e.g. an in-progress upload cancelled by the user). Callers rely on this to detect that
+    // case -- a non-null return type here made Room throw NullPointerException on an empty
+    // result instead of letting callers' `== null` / `!= null` checks run.
     @Query("SELECT * from contribution WHERE pageId=:pageId")
-    abstract fun getContribution(pageId: String): Contribution
+    abstract fun getContribution(pageId: String): Contribution?
 
     @Query("SELECT * from contribution WHERE state IN (:states) order by media_dateUploaded DESC")
     abstract fun getContribution(states: List<Int>): Single<List<Contribution>>
