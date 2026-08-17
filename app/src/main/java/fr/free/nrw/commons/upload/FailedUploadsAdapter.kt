@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.net.Uri
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,19 +75,22 @@ class FailedUploadsAdapter(
         if (item != null) {
             holder.titleTextView.setText(item.media.displayTitle)
         }
+        // item?.localUri.toString() (note the placement of the `?`) coerces a missing item or a
+        // missing localUri into the literal string "null" rather than an actual null, since
+        // Any?.toString() never returns null. That made every downstream null-check on
+        // imageSource vacuously true, so a failed upload with no localUri would try to load an
+        // ImageRequest for a bogus file named "null" instead of skipping image loading.
+        val imageSource: String? = item?.localUri?.toString()
+
+        // Stays null (clearing any stale image left over from view recycling) unless a real
+        // source is found below; either way it's applied once via the unconditional
+        // setImageRequest call at the end of this function.
         var imageRequest: ImageRequest? = null
-        val imageSource: String = item?.localUri.toString()
-
-        if (!TextUtils.isEmpty(imageSource)) {
-            if (URLUtil.isFileUrl(imageSource)) {
-                imageRequest = ImageRequest.fromUri(Uri.parse(imageSource))!!
-            } else if (imageSource != null) {
-                val file = File(imageSource)
-                imageRequest = ImageRequest.fromFile(file)!!
-            }
-
-            if (imageRequest != null) {
-                holder.itemImage.setImageRequest(imageRequest)
+        if (!imageSource.isNullOrEmpty()) {
+            imageRequest = if (URLUtil.isFileUrl(imageSource)) {
+                ImageRequest.fromUri(Uri.parse(imageSource))!!
+            } else {
+                ImageRequest.fromFile(File(imageSource))!!
             }
         }
 

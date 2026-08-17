@@ -63,8 +63,14 @@ object ViewUtil {
         }
     }
 
+    // These three overloads are @JvmStatic, so nothing at the Kotlin compiler level stops a Java
+    // caller from passing an actual null despite `context` being declared non-null -- and Kotlin
+    // generates an implicit Intrinsics.checkNotNullParameter() that throws before the body's own
+    // `if (context == null) return` guard ever runs, making that guard dead code (the compiler
+    // flags these as "Condition is always false"). Made nullable to match the fourth overload
+    // below, which already gets this right, so the existing guard actually does its job.
     @JvmStatic
-    fun showLongToast(context: Context, text: String) {
+    fun showLongToast(context: Context?, text: String) {
         if (context == null) {
             return
         }
@@ -75,7 +81,7 @@ object ViewUtil {
     }
 
     @JvmStatic
-    fun showLongToast(context: Context, @StringRes stringResourceId: Int) {
+    fun showLongToast(context: Context?, @StringRes stringResourceId: Int) {
         if (context == null) {
             return
         }
@@ -86,7 +92,7 @@ object ViewUtil {
     }
 
     @JvmStatic
-    fun showShortToast(context: Context, text: String) {
+    fun showShortToast(context: Context?, text: String) {
         if (context == null) {
             return
         }
