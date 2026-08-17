@@ -201,12 +201,21 @@ class CommonsApplication : MultiDexApplication() {
     @SuppressLint("CheckResult")
     fun clearApplicationData(context: Context, logoutListener: LogoutListener) {
         val cacheDirectory = context.cacheDir
-        val applicationDirectory = File(cacheDirectory.parent)
-        if (applicationDirectory.exists()) {
-            val fileNames = applicationDirectory.list()
-            for (fileName in fileNames) {
-                if (fileName != "lib") {
-                    FileUtils.deleteFile(File(applicationDirectory, fileName))
+        // Both File.getParent() and File.list() are documented to return null (parent: if the
+        // path has none; list: if the path isn't a directory, or on an I/O error) rather than
+        // always succeeding. Neither was null-checked, so this could throw a NullPointerException
+        // and abort clearApplicationData() before the actual logout below ever runs.
+        val applicationDirectoryPath = cacheDirectory.parent
+        if (applicationDirectoryPath != null) {
+            val applicationDirectory = File(applicationDirectoryPath)
+            if (applicationDirectory.exists()) {
+                val fileNames = applicationDirectory.list()
+                if (fileNames != null) {
+                    for (fileName in fileNames) {
+                        if (fileName != "lib") {
+                            FileUtils.deleteFile(File(applicationDirectory, fileName))
+                        }
+                    }
                 }
             }
         }
