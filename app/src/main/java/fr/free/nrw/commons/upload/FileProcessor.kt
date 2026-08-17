@@ -57,9 +57,16 @@ class FileProcessor
             filePath: String?,
             inAppPictureLocation: LatLng?,
         ): ImageCoordinates {
+            // uploadableFile?.getFilePath() (the only real caller) is genuinely null whenever
+            // uploadableFile itself is null. filePath!! below only guards against IOException,
+            // so a null filePath used to throw an uncaught NullPointerException here instead of
+            // degrading gracefully the way a failed EXIF read already does below.
+            if (filePath == null) {
+                return ImageCoordinates(null, inAppPictureLocation)
+            }
             val exifInterface: ExifInterface? =
                 try {
-                    ExifInterface(filePath!!)
+                    ExifInterface(filePath)
                 } catch (e: IOException) {
                     Timber.e(e)
                     null
@@ -145,12 +152,16 @@ class FileProcessor
             LongRange
             val timeOfCreationRange =
                 timeOfCreation - oneHundredAndTwentySeconds..timeOfCreation + oneHundredAndTwentySeconds
+            // File.getParentFile() is null for a file with no parent, and File.listFiles() is
+            // documented to return null (not an empty array) if the path isn't a readable
+            // directory or an I/O error occurs -- both real conditions, not just theoretical
+            // ones, so this used to crash with an NPE instead of just finding no similar images.
             fileBeingProcessed.parentFile
-                .listFiles()
-                .asSequence()
-                .filter { it.lastModified() in timeOfCreationRange }
-                .map { Pair(it, readImageCoordinates(it)) }
-                .firstOrNull { it.second?.decimalCoords != null }
+                ?.listFiles()
+                ?.asSequence()
+                ?.filter { it.lastModified() in timeOfCreationRange }
+                ?.map { Pair(it, readImageCoordinates(it)) }
+                ?.firstOrNull { it.second?.decimalCoords != null }
                 ?.let { fileCoordinatesPair ->
                     similarImageInterface?.showSimilarImageFragment(
                         fileBeingProcessed.path,
