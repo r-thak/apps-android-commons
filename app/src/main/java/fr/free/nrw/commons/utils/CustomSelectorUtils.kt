@@ -36,7 +36,7 @@ class CustomSelectorUtils {
                     val result = fileUtilsWrapper.getSHA1(contentResolver.openInputStream(uri))
                     result
                 } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
+                    Timber.e(e)
                     ""
                 }
             }
@@ -89,9 +89,10 @@ class CustomSelectorUtils {
                     if (e is UnknownHostException) {
                         // Handle no network connection.
                         Timber.e(e, "Network Connection Error")
+                    } else {
+                        Timber.e(e)
                     }
                     result = ImageLoader.Result.ERROR
-                    e.printStackTrace()
                 }
                 result
             }
